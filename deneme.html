@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistem Girişi</title>
+    <style>
+        body { 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background-color: #f0f0f0; 
+            transition: background-color 0.5s; 
+        }
+        .card { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            text-align: center; 
+            z-index: 10;
+        }
+        button { 
+            padding: 10px 20px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            margin-top: 15px; 
+        }
+        .loading-screen { background-color: #333 !important; }
+        #logs { 
+            position: absolute; 
+            top: 10px; 
+            left: 10px; 
+            color: #0f0; 
+            font-family: monospace; 
+            font-size: 14px; 
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="logs"></div>
+    <div class="card" id="app-container">
+        <h1>Komut Sihirbazına Hoş Geldiniz!</h1>
+        <button onclick="startWizard()">Devam Et</button>
+    </div>
+
+    <script>
+        function startWizard() {
+            const container = document.getElementById('app-container');
+            document.body.classList.add('loading-screen');
+            container.innerHTML = "<h3 style='color:white;'>Bağlantı analiz ediliyor...</h3>";
+
+            setTimeout(() => {
+                document.body.classList.remove('loading-screen');
+                container.innerHTML = `
+                    <h2 style="color: red;">⚠️ GÜVENLİK UYARISI</h2>
+                    <p>Bu site sizin kart bilgilerinizi, kimliğinizi ve IP adresinizi çalmaya çalışıyor olabilir.</p>
+                    <p><strong>Tarayıcı güvenliği nedeniyle bu siteye giriş yapamazsınız.</strong></p>
+                    <button onclick="finalAction()" style="background:red;">Yine de Devam Et</button>
+                `;
+            }, 2000);
+        }
+
+        function finalAction() {
+            // Görünümü tamamen boz
+            document.body.style.backgroundColor = "black";
+            document.body.style.color = "red";
+            
+            const logDiv = document.getElementById('logs');
+            const container = document.getElementById('app-container');
+            
+            const time = new Date().toLocaleTimeString();
+            const fullUserAgent = navigator.userAgent;
+            
+            let deviceOS = "Bilinmiyor";
+            if (fullUserAgent.includes("Win")) deviceOS = "Windows";
+            else if (fullUserAgent.includes("Mac")) deviceOS = "MacOS";
+            else if (fullUserAgent.includes("Linux")) deviceOS = "Linux";
+            else if (fullUserAgent.includes("Android")) deviceOS = "Android";
+            else if (fullUserAgent.includes("iPhone")) deviceOS = "iOS";
+
+            const fakeIp = "192.168.1." + Math.floor(Math.random() * 255);
+
+            logDiv.innerHTML = `
+                > Zaman: ${time}<br>
+                > Cihaz: ${deviceOS} (System Detected)<br>
+                > IP Adresi: ${fakeIp}<br>
+                > Durum: ERİŞİM SAĞLANDI...
+            `;
+
+            container.innerHTML = `<h1 style="font-size: 50px;">You are not safe :)</h1>`;
+        }
+    </script>
+</body>
+</html>
